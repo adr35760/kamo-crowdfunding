@@ -108,14 +108,18 @@ function StoryBody({ project }: { project: Project }) {
   return <div className="story">{nodes}</div>;
 }
 
+/**
+ * リターンの残数表示。
+ * - 数量限定: 「残り{上限-支援数}」（売り切れは SOLD OUT）
+ * - 数量無制限: 「残り」は出さない（残り∞と誤読されるため）。支援済み数を「N件が支援」で見せる
+ */
 function rewardLeftLabel(r: Reward): { label: string; soldOut: boolean } {
   const soldOut = r.quantityLimit !== null && r.claimedCount >= r.quantityLimit;
   if (soldOut) return { label: "SOLD OUT", soldOut: true };
   if (r.quantityLimit !== null) {
     return { label: `残り${r.quantityLimit - r.claimedCount}`, soldOut: false };
   }
-  // 数量無制限のリターンは、モックの表示（=支援済み数）に合わせている
-  return { label: `残り${r.claimedCount}`, soldOut: false };
+  return { label: `${r.claimedCount}件が支援`, soldOut: false };
 }
 
 /** 案件詳細（PRD §6-4 / モック 4.案件詳細） */

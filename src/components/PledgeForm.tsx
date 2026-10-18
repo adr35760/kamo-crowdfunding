@@ -71,7 +71,7 @@ export function PledgeForm({ rewards }: { rewards: Reward[] }) {
                     {soldOut
                       ? "SOLD OUT"
                       : r.quantityLimit === null
-                        ? "数量制限なし"
+                        ? `${r.claimedCount}件が支援`
                         : `残り${r.quantityLimit - r.claimedCount}／${r.quantityLimit}`}
                   </span>
                 </span>
