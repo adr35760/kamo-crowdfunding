@@ -100,3 +100,13 @@ CREATE TABLE IF NOT EXISTS site_memberships (
   UNIQUE(site_id, user_id)
 );
 CREATE INDEX IF NOT EXISTS idx_projects_site_id ON projects(site_id);
+ALTER TABLE sites ENABLE ROW LEVEL SECURITY;
+ALTER TABLE users ENABLE ROW LEVEL SECURITY;
+ALTER TABLE projects ENABLE ROW LEVEL SECURITY;
+ALTER TABLE rewards ENABLE ROW LEVEL SECURITY;
+ALTER TABLE pledges ENABLE ROW LEVEL SECURITY;
+ALTER TABLE site_memberships ENABLE ROW LEVEL SECURITY;
+DROP POLICY IF EXISTS projects_public_read ON projects;
+CREATE POLICY projects_public_read ON projects FOR SELECT TO anon, authenticated USING (status = 'live');
+DROP POLICY IF EXISTS rewards_public_read ON rewards;
+CREATE POLICY rewards_public_read ON rewards FOR SELECT TO anon, authenticated USING (is_active = true AND EXISTS (SELECT 1 FROM projects p WHERE p.id = rewards.project_id AND p.status = 'live'));
