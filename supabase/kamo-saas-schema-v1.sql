@@ -107,6 +107,6 @@ ALTER TABLE rewards ENABLE ROW LEVEL SECURITY;
 ALTER TABLE pledges ENABLE ROW LEVEL SECURITY;
 ALTER TABLE site_memberships ENABLE ROW LEVEL SECURITY;
 DROP POLICY IF EXISTS projects_public_read ON projects;
-CREATE POLICY projects_public_read ON projects FOR SELECT TO anon, authenticated USING (status = 'live');
+CREATE POLICY projects_public_read ON projects FOR SELECT TO anon, authenticated USING (status IN ('live', 'completed'));
 DROP POLICY IF EXISTS rewards_public_read ON rewards;
-CREATE POLICY rewards_public_read ON rewards FOR SELECT TO anon, authenticated USING (is_active = true AND EXISTS (SELECT 1 FROM projects p WHERE p.id = rewards.project_id AND p.status = 'live'));
+CREATE POLICY rewards_public_read ON rewards FOR SELECT TO anon, authenticated USING (is_active = true AND EXISTS (SELECT 1 FROM projects p WHERE p.id = rewards.project_id AND p.status IN ('live', 'completed')));
